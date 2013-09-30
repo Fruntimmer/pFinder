@@ -79,17 +79,17 @@ def Main():
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				running = False
-			if event.type == pygame.KEYDOWN:	
+			if event.type == pygame.KEYDOWN:    
 				key = pygame.key.get_pressed()
 				if key[pygame.K_RETURN]:
 					if goalNode != None and startNode != None:
-						#mapi.CalculateAllH(goalNode)
+						mapi.CalculateAllH(goalNode)
 						astar = pFind.pathFinder(startNode, goalNode)
-						path = astar.JumpFind(mapi.grid, mapi.tileAmount)
+						path = astar.AstarFind()
 					else:
 						print "Missing start or goal."
 			if event.type == pygame.MOUSEBUTTONDOWN:
-				(b1,b2,b3) = pygame.mouse.get_pressed()			
+				(b1,b2,b3) = pygame.mouse.get_pressed()         
 				(x,y) = GetGridMousePos(tileSize)
 				
 				if b1:
@@ -117,7 +117,7 @@ def Main():
 				goalNode = Drag(goalNode, mapi.grid, (255,50,50), x,y)
 
 		for x in range(0,tileAmount):
-			for y in range(0, tileAmount):			
+			for y in range(0, tileAmount):          
 				DisplayCell(mapi.grid[x][y], tileSize, border)
 		pygame.display.flip()
 

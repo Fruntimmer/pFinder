@@ -11,10 +11,12 @@ class Cell():
 
 		#Astar variables
 		self.parent = None
+		
 		self.h = 0
 		self.g = 0
 		self.f = 0
-		self.neighbours = []
+		
+		self.neighbours = {}
 		self.closed = False
 
 	def CalculateH(self, goal):
@@ -37,21 +39,25 @@ class Cell():
 	def AddParent(self, node):
 		self.parent = node
 
-	def AddNeighbour(self, nCell):
+	def AddNeighbour(self, nCell, dir1, dir2):
 		if nCell not in self.neighbours:
-			self.neighbours.append(nCell)
-			nCell.AddNeighbour(self)
+			self.neighbours[dir1] = nCell
+			nCell.neighbours[dir2] = self
+
+			#self.neighbours.append(nCell)
+			#nCell.AddNeighbour(self)
 
 	def RemoveNeighbour(self, neighbour):
-		if neighbour in self.neighbours:
-			self.neighbours.remove(neighbour)
+		for key, value in self.neighbours.items():
+			if neighbour == value:
+				del self.neighbours[key]
 
 	def DisplayNeighbours(self):
-		for cell in self.neighbours:
+		for cell in self.neighbours.values():
 			cell.color = selColor
 
 	def HideNeighbours(self):
-		for cell in self.neighbours:
+		for cell in self.neighbours.values():
 			cell.color = self.defaultColor
 
 	def OpenNode(self, grid):
@@ -62,9 +68,9 @@ class Cell():
 	def CloseNode(self):
 		self.closed = True
 		self.color = (155,155,155)
-		for node in self.neighbours:
+		for node in self.neighbours.values():
 			node.RemoveNeighbour(self)
-		self.neighbours = []
+		self.neighbours = {}
 
 class jCell(Cell):
 	def __init__(self , x,y):
@@ -94,28 +100,28 @@ class Grid():
 		a = 1
 
 		if y > 0 and self.IsValidNeighbour(x,y-a):
-			node.AddNeighbour(self.grid[x][y-a])
+			node.AddNeighbour(self.grid[x][y-a], "n","s")
 		if x > 0:
 			if self.IsValidNeighbour(x-a,y):
-				node.AddNeighbour(self.grid[x-a][y])
+				node.AddNeighbour(self.grid[x-a][y], "w","e")
 			if y > 0 and self.IsValidNeighbour(x-a, y-a):
-				node.AddNeighbour(self.grid[x-a][y-a])
+				node.AddNeighbour(self.grid[x-a][y-a], "nw", "se")
 			if y < self.tileAmount-1 and self.IsValidNeighbour(x-a, y+a):
-				node.AddNeighbour(self.grid[x-a][y+a])
+				node.AddNeighbour(self.grid[x-a][y+a], "sw", "ne")
 		if allDir == True:
 			self.RevCheckNeighbours(node, x, y)
 	def RevCheckNeighbours(self, node, x, y):
 		a = -1
 
 		if y < self.tileAmount-1 and self.IsValidNeighbour(x,y-a):
-			node.AddNeighbour(self.grid[x][y-a])
+			node.AddNeighbour(self.grid[x][y-a], "s" , "n")
 		if x < self.tileAmount-1:
 			if self.IsValidNeighbour(x-a,y):
-				node.AddNeighbour(self.grid[x-a][y])
+				node.AddNeighbour(self.grid[x-a][y], "e","w")
 			if y < self.tileAmount-1 and self.IsValidNeighbour(x-a, y-a):
-				node.AddNeighbour(self.grid[x-a][y-a])
+				node.AddNeighbour(self.grid[x-a][y-a], "se","nw")
 			if y > 0 and self.IsValidNeighbour(x-a, y+a):
-				node.AddNeighbour(self.grid[x-a][y+a])
+				node.AddNeighbour(self.grid[x-a][y+a], "ne","sw")
 
 	def CalculateAllH(self, goal):
 		for x in range (0, self.tileAmount):

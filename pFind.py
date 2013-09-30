@@ -14,7 +14,7 @@ class pathFinder:
 
 	def AstarFind(self):
 		while self.FoundPath != True:
-			for node in self.activeNode.neighbours:
+			for node in self.activeNode.neighbours.values():
 				if node not in  self.closedList:
 					if node in self.openList:
 						if node.g > self.activeNode.g + node.CalculateLocalG(self.activeNode.x, self.activeNode.y):
@@ -53,7 +53,6 @@ class pathFinder:
 				break
 		
 
-
 	def CheckJumpX(self,grid, x):
 		y =  self.activeNode.y
 		if grid[x][y].closed:
@@ -81,4 +80,4 @@ class pathFinder:
 
 	def FindLowestF(self):
 		self.openList.sort(key=lambda node: node.f, reverse=False)
-		return self.openList[0]
+		return self.openList[0]#BAJS
