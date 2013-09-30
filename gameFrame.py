@@ -85,7 +85,8 @@ def Main():
 					if goalNode != None and startNode != None:
 						mapi.CalculateAllH(goalNode)
 						astar = pFind.pathFinder(startNode, goalNode)
-						path = astar.AstarFind()
+						path = astar.JumpFind()
+						#path = astar.AstarFind()
 					else:
 						print "Missing start or goal."
 			if event.type == pygame.MOUSEBUTTONDOWN:

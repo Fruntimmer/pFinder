@@ -68,26 +68,14 @@ class Cell():
 	def CloseNode(self):
 		self.closed = True
 		self.color = (155,155,155)
-		for node in self.neighbours.values():
-			node.RemoveNeighbour(self)
-		self.neighbours = {}
-
-class jCell(Cell):
-	def __init__(self , x,y):
-		self.N = None
-		self.NE = None
-		self.E = None
-		self.SE = None
-		self.S = None
-		self.SW = None
-		self.W = None
-		self.NW = None
-		Cell.__init__(self,x,y)
-
+		#for node in self.neighbours.values():
+		#	node.RemoveNeighbour(self)
+		#self.neighbours = {}
 
 class Grid():
 	def __init__(self, tileAmount):
 		self.tileAmount = tileAmount
+
 	def CreateGrid(self):
 		self.grid = [[0 for x in range(self.tileAmount)] for y in range(self.tileAmount)]
 		for x in range (0, self.tileAmount):
@@ -98,23 +86,28 @@ class Grid():
 		return self.grid
 	def CheckNeighbours(self, node, x, y, allDir = False):
 		a = 1
-
 		if y > 0 and self.IsValidNeighbour(x,y-a):
 			node.AddNeighbour(self.grid[x][y-a], "n","s")
+
 		if x > 0:
 			if self.IsValidNeighbour(x-a,y):
 				node.AddNeighbour(self.grid[x-a][y], "w","e")
+			
 			if y > 0 and self.IsValidNeighbour(x-a, y-a):
 				node.AddNeighbour(self.grid[x-a][y-a], "nw", "se")
+			
 			if y < self.tileAmount-1 and self.IsValidNeighbour(x-a, y+a):
 				node.AddNeighbour(self.grid[x-a][y+a], "sw", "ne")
+		
 		if allDir == True:
 			self.RevCheckNeighbours(node, x, y)
+
 	def RevCheckNeighbours(self, node, x, y):
 		a = -1
 
 		if y < self.tileAmount-1 and self.IsValidNeighbour(x,y-a):
 			node.AddNeighbour(self.grid[x][y-a], "s" , "n")
+		
 		if x < self.tileAmount-1:
 			if self.IsValidNeighbour(x-a,y):
 				node.AddNeighbour(self.grid[x-a][y], "e","w")
